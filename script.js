@@ -1,10 +1,16 @@
-window.addEventListener("DOMContentLoaded", () => {
-  const jobContainer = document
-    .querySelector("main")
+const observer = new MutationObserver(() => {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  const jobContainer = main
     .querySelector('[tabindex="-1"]')
     .children[1].querySelector("ul");
 
-  const observer = new MutationObserver(() => {
+  if (!jobContainer) return;
+
+  observer.disconnect();
+
+  const jobObserver = new MutationObserver(() => {
     const jobs = document.querySelectorAll(".job-card-container");
 
     jobs.forEach((job) => {
@@ -15,5 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  observer.observe(jobContainer, { subtree: true, childList: true });
+  jobObserver.observe(jobContainer, { subtree: true, childList: true });
 });
+
+observer.observe(document.body, { childList: true, subtree: true });
